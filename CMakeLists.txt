@@ -3,6 +3,8 @@ project(wl++ VERSION 0.1.0)
 
 include(requirements.cmake)
 
+find_package(Boost QUIET)
+
 if(NOT WLXX_REQUIREMENTS_MET)
     message(FATAL_ERROR "wl++ platform requirements are not met. Cannot build.")
 endif()
@@ -42,3 +44,8 @@ endfunction()
 add_subdirectory(source)
 
 wlxx_install(EXPORT wlxx-targets DESTINATION share/cmake)
+
+if(TARGET Boost::boost)
+    add_executable(wlxx-example example.cpp)
+    target_link_libraries(wlxx-example PRIVATE wl++ Boost::boost)
+endif()

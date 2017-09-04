@@ -438,6 +438,10 @@ class Event(Message):
             name=self.name,
             params=self.cpp_params())
 
+    @property
+    def swap(self):
+        return 'std::swap(_{name}_handler, other._{name}_handler);'.format(name=self.name)
+
     def event_listener(self, indent):
         return render_block(
             r'''\
@@ -546,6 +550,7 @@ class Interface(object):
                 $event_setters
 
                 static constexpr ::wl_interface& interface = detail::$iface_name;
+                static constexpr const char* const interface_name = "$name";
 
                 explicit operator bool() const { return !!_impl; }
             };
@@ -560,6 +565,7 @@ class Interface(object):
             '\n'.join(e.event_setter for e in self.events), indent=4)
         content = render_block(
             content,
+            name=self.name,
             iface_name=self.interface_name,
             impl_type=self.impl_type,
             handlers=handlers,
@@ -636,6 +642,7 @@ class Interface(object):
                 if (other._impl) {
                     ::wl_proxy_set_user_data(reinterpret_cast<::wl_proxy*>(other._impl), &other);
                 }
+                $swap_handlers;
                 return *this;
             }
 
@@ -657,6 +664,7 @@ class Interface(object):
             includes=self._render_includes(include_soft=True),
             wl_interface_spec=self._render_wl_interface_spec(),
             event_listeners=listeners,
+            swap_handlers=self._render_swap_handlers(4),
             req_impls=self._render_request_impls(),
             specials_impl=render_block(_specials_for(self.cpp_name)['impls']))
         write_if_different(opath, content)
@@ -705,6 +713,9 @@ class Interface(object):
 
     def _render_request_impls(self):
         return '\n'.join(r.render_impl() for r in self.requests)
+
+    def _render_swap_handlers(self, indent):
+        return render_block('\n'.join(e.swap for e in self.events))
 
     def _render_includes(self, include_soft=False):
         tys = []

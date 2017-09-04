@@ -14,12 +14,6 @@ if(NOT PYTHON_EXECUTABLE)
     set(met FALSE)
 endif()
 
-find_package(Boost)
-if(NOT Boost_FOUND)
-    message(STATUS "Cannot build wl++ wihtout Boost (For Boost.Interprocess)")
-    set(met FALSE)
-endif()
-
 include(CMakePushCheckState)
 include(CheckCXXSourceCompiles)
 
