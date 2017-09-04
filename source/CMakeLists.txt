@@ -36,6 +36,11 @@ wlxx_add_library(wl++
     ${sources}
     )
 
+target_include_directories(wl++
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+        $<BUILD_INTERFACE:${genroot}>
+    )
 target_compile_features(wl++ PUBLIC cxx_std_14)
 target_link_libraries(wl++ PUBLIC wayland::client)
 add_library(wl++::wl++ ALIAS wl++)
