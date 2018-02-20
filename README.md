@@ -1,3 +1,13 @@
+# IMPORTANT:
+
+This project is just a little experiment I threw together in a few hours,
+and hasn't been updated or given any proper TLC for several months.
+
+For a library with the same design goals but proper maintainence and 
+support, look at [waylandpp](https://github.com/NilsBrause/waylandpp).
+
+**Don't use this for anything important!**
+
 # Wayland Client C++ Bindings
 
 This library provides modern C++14 bindings to libwayland-client. These
